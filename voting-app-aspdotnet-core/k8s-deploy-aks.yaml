@@ -16,12 +16,12 @@ spec:
     spec:
       containers:
       - name: vote-app
-        image: vote-app:v1.0
+        image: ncdev.azurecr.io/vote-app:1.0
         ports:
         - containerPort: 80
           name: vote-app-port
       imagePullSecrets:
-        - regcred 
+        - name: regcred 
 ---
 apiVersion: v1
 kind: Service
