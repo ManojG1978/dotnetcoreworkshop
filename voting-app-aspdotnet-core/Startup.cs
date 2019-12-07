@@ -24,7 +24,7 @@ namespace VotingApp
             
             services.AddStackExchangeRedisCache(options =>
             {
-                options.Configuration = "redis-db";
+                options.Configuration = "localhost";
                 options.InstanceName = "SampleInstance";
             });
         }

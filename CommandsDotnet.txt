@@ -1,0 +1,77 @@
+1) Create a Container Registry, Enable Admin access
+
+2) Git Clone http://bit.ly/dotnetcorews into Cloud Shell 
+
+3) Push Image to your ACR Repo
+az acr build --registry ncdev --image helloworld:1.0 .
+
+
+[FOr the Vote App]
+az acr build --registry ncdev --image vote-app:1.0 .
+
+5) Create ACI instance
+ncdev.azurecr.io/helloworld:1.0
+====================
+Kubernetes
+1)  Create AKS cluster
+
+2) Create Image pull secret
+kubectl create secret docker-registry regcred --docker-server=ncdev.azurecr.io --docker-username=ncdev --docker-password=Lu/3aD7Uu46PAYN9Ocpb1sZ9Q4nHSit1
+
+3) Connect to AKS Cluster
+az aks get-credentials --resource-group DotnetCoreWorkshop --name dotnetcore-workshop
+
+4) Deploy Application
+kubectl create -f ./k8s-deploy-aks.yaml
+
+============================
+K8S Tasks
+
+[Register Microsoft.Networks resource provider]
+
+1) Create cluster role binding
+kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
+
+2) Run
+az aks browse --resource-group DotnetCoreWorkshop --name dotnetcore-workshop
+
+3) Auto-scale deployment
+kubectl autoscale deployment vote-app-deployment --cpu-percent=50 --min=3 --max=6
+
+4) Scale nodes
+az aks scale --resource-group DotnetCoreWorkshop --name dotnetcore-workshop --node-count 2
+
+
+
+
+
+
+
+
+======
+MISC
+Cleaning up
+docker rm -v $(docker ps -a -q -f status=exited)
+
+kubectl config set-context --current --namespace=multi-tier-app
+
+=========
+
+
+1) dotnet new mvc
+2) dotnet dev-certs https --trust
+trust the dev certificate
+3) dotnet add package Microsoft.Extensions.Caching.StackExchangeRedis --version 3.0.1
+Install Redis client
+
+Local Build
+1) Tag the image
+ (if local)
+ docker image tag helloworld:dev ncdev.azurecr.io/helloworld-dotnetcore:1.0
+ 
+ docker build -t ncdev.azurecr.io/helloworld:1.0  .
+2) Login to ACR
+
+ docker login -u ncdev -p Lu/3aD7Uu46PAYN9Ocpb1sZ9Q4nHSit1 ncdev.azurecr.io
+
+3) docker image push ncdev.azurecr.io/helloworld:1.0
